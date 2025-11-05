@@ -46,7 +46,7 @@ public partial class ProductMeet : ContentPage
 
     private async void DeleteProduct_click(object sender, EventArgs e)
     {
-        DBService.DeleteProductAsync();
+      
       
         
     }
