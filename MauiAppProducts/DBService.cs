@@ -12,13 +12,13 @@ public class DBService
 
     private int _nextProductId = 1;
     private int _nextCategoriesId = 1;
-
+    private List<int> AutoIncr { get; set; } = new List<int> { 1, 1 };
     public DBService()
     {
         InitializeData();
 
     }
-    private void InitializeData()
+    private async void InitializeData()
     {
         _categories = new List<Category>
         {
@@ -39,7 +39,40 @@ public class DBService
     {
         return _categories.ToList();
     }
-
+    public async void SaveCategory()
+    {
+        string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbCategory.json");
+        using FileStream fileStream=File.Create(filepath);
+        JsonSerializer.Serialize(fileStream, _categories);
+    }
+    public async void SaveProduct()
+    {
+        string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbProduct.json");
+        using FileStream fileStream = File.Create(filepath);
+        JsonSerializer.Serialize(fileStream, _products);
+    }
+    public async Task<List<Product>> LoadProduct()
+    {
+        string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbProduct.json");
+        if (!File.Exists(filepath))
+        {
+            _products = new List<Product>();
+            return new List<Product>();
+        }
+        var data1 = await File.ReadAllTextAsync(filepath);
+       _products = JsonSerializer.Deserialize<List<Product>>(data1);
+        return new List<Product>(_products);
+    }
+    public async Task<List<Category>> LoadCategory()
+    {
+        string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbCategory.json");
+        if (!File.Exists(filepath)) { _categories = new List<Category>();
+            return new List<Category>();
+        }
+        var data1 = await File.ReadAllTextAsync(filepath);
+        _categories = JsonSerializer.Deserialize<List<Category>>(data1);
+        return new List<Category>(_categories);
+    }
 
     public async Task<Category> AddCategoryAsync(Category category)
     {
@@ -52,6 +85,7 @@ public class DBService
 
         }
         return existing;
+        SaveCategory();
     }
 
     public async Task<Category> UpdateCategoryAsync(Category category)
@@ -76,7 +110,7 @@ public class DBService
             var hasProducts = _products.Any(p => p.CategoryId == id);
             if (hasProducts)
             {
-                throw new InvalidOperationException("Нельзя удалить категорию к которой привязаны продукты");
+                return false;
             }
             return true;
         }
@@ -102,32 +136,36 @@ public class DBService
         }
         return existing;
     }
-    public async Task<Product> UpdateProductAsync(Product product)
+    public async void UpdateProductAsync(int productId, Product upproduct)
     {
         await Task.Delay(500);
-        var existing = _products.FirstOrDefault(c => c.Id == product.Id);
+       foreach(Product product1 in _products)
         {
-            if (existing != null)
+            if(product1.Id == productId)
             {
-                existing.Name = product.Name;
-                existing.Description = product.Description;
-                existing.Price = product.Price;
-
+                product1.Name = upproduct.Name;
+                product1.Description = upproduct.Description;
+                product1.Price = upproduct.Price;
+                SaveProduct();
+                break;
             }
-            return existing;
         }
+        
+        
     }
 
-    public async Task<bool> DeleteProductAsync(int id)
+    public async void DeleteProductAsync(int id)
     {
-        await Task.Delay(500);
-        var existing = _products.FirstOrDefault(p => p.Id == id);
-        if (existing != null)
+        Product productDell = new Product();
+        foreach(Product product in _products)
         {
-            _products.Remove(existing);
-            return true;
+            if (product.Id == id)
+            {
+                productDell = product;
+            }
+            _products.Remove(productDell);
+            SaveProduct();
         }
-        return false;
     }
     public async Task <List<Category>> GetCategoriesAsync()
     {
@@ -135,17 +173,60 @@ public class DBService
         return _categories.ToList();
     }
 
+
+    //public async Task<Category> GetAllCategoriesId(int Id)
+    //{
+    //    await Task.Delay(500);
+    //    Category category = _categories.FirstOrDefault(c => c.Id == Id);
+    //    category = new Category
+    //    {
+
+    //    };
+
+    //}
+    public async Task<Product> GetAllProductId(int Id)
+    {
+        await Task.Delay(500);
+        return _products.FirstOrDefault(p => p.Id == Id);
+
+    }
+
+    public async void SaveId()
+    {
+        string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbAutoIncr.json");
+        using FileStream fileStream = File.Create(filepath);
+        JsonSerializer.Serialize(fileStream, AutoIncr);
+    }
+    public async void LoadId()
+    {
+        string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbAutoIncr.json");
+        if (!File.Exists(filepath))
+        {
+            AutoIncr = new List<int> { 0, 0 };
+        }
+        var data1= await File.ReadAllTextAsync(filepath);
+        AutoIncr = JsonSerializer.Deserialize<List<int>>(data1);
+    }
+   
+
+
     private async Task Save()
     {
 
-       string _categoriesFile = Path.Combine(FileSystem.Current.AppDataDirectory, "_categoriesFile");
-       string _productsFile = Path.Combine(FileSystem.Current.AppDataDirectory, "_productsFile");
+       string _categoriesFile = Path.Combine(FileSystem.Current.AppDataDirectory, "categoriesFile.db");
+       string _productsFile = Path.Combine(FileSystem.Current.AppDataDirectory, "productsFile.db");
 
         string json = JsonSerializer.Serialize(_categories);
-        File.WriteAllText(@"_categoriesFile", json);
+        await File.WriteAllTextAsync(_categoriesFile, json);
 
         string json1 = JsonSerializer.Serialize(_products);
-        File.WriteAllText(@"_productsFile", json);
+        await File.WriteAllTextAsync(_productsFile, json);
 
+    }
+
+    private async Task LoadAsync()
+    {
+        await Task.Run(() => LoadAsync());
+        
     }
 }

@@ -6,4 +6,9 @@ public partial class ProductSnaks : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    private void AddProduct_click(object sender, EventArgs e)
+    {
+
+    }
 }

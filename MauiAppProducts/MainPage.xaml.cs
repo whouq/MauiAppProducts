@@ -2,30 +2,32 @@
 {
     public partial class MainPage : ContentPage
     {
+        DBService dBService = new DBService();
 
         public MainPage()
         {
             InitializeComponent();
-        }
-
-        private void Meet(object sender, EventArgs e)
-        {
-            Navigation.PushAsync(new ProductMeet());
-        }
-
-        private void Milk(object sender, EventArgs e)
-        {
 
         }
 
-        private void Vegetable(object sender, EventArgs e)
+        private async void Meet_Click(object sender, EventArgs e)
         {
-
+          await Navigation.PushAsync(new ProductMeet(dBService));
         }
 
-        private void Snacks(object sender, EventArgs e)
+        private async void Milk_Click(object sender, EventArgs e)
         {
+           await Navigation.PushAsync(new ProductMilk());
+        }
 
+        private async void Vegetable_Click(object sender, EventArgs e)
+        {
+          await Navigation.PushAsync(new ProductVegetable());
+        }
+
+        private async void Snacks_Click(object sender, EventArgs e)
+        {
+           await Navigation.PushAsync(new ProductSnaks());
         }
     }
 }
