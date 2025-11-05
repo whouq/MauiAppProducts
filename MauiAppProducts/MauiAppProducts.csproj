@@ -65,28 +65,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="ProductSnaks.xaml.cs">
-	    <DependentUpon>ProductSnaks.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="ProductMeet.xaml.cs">
-	    <DependentUpon>ProductMeet.xaml</DependentUpon>
+	  <Compile Update="ProductList.xaml.cs">
+	    <DependentUpon>ProductList.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="AddCategory.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="AddProduct.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="ProductMilk.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="ProductSnaks.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="ProductMeet.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="ProductVegetable.xaml">
+	  <MauiXaml Update="ProductList.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

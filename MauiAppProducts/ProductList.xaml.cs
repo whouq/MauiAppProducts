@@ -1,9 +1,10 @@
 
+
 using System.Threading.Tasks;
 
 namespace MauiAppProducts;
 
-public partial class ProductMeet : ContentPage
+public partial class ProductList : ContentPage
 {
     private readonly DBService dBService;
     private List<Category> categories = new List<Category>();
@@ -21,14 +22,19 @@ public partial class ProductMeet : ContentPage
         get => products;
         set { products = value; OnPropertyChanged(); } 
     }
-    public ProductMeet(DBService dBService)
+    public ProductList(DBService dBService)
 	{
 		InitializeComponent();
-        DBService = dBService;
+        this.dBService = dBService;
+
         LoadList();
         BindingContext = this;
     }
-
+    public async void LoadList()
+    {
+        categories = await dBService.LoadCategory();
+        products = await dBService.LoadProduct();
+    }
     protected async override void OnAppearing()
     {
         var allProducts = await dBService.GetAllProductsAsync();
@@ -40,8 +46,7 @@ public partial class ProductMeet : ContentPage
 
     private async void EditProduct_click(object sender, EventArgs e)
     {
-       var button = sender as Button;
-        var item = button?.BindingContext;
+        await Navigation.PushAsync(new AddProduct());
     }
 
     private async void DeleteProduct_click(object sender, EventArgs e)
@@ -53,7 +58,7 @@ public partial class ProductMeet : ContentPage
 
     private async void AddProduct_click(object sender, EventArgs e)
     {
-        AddProduct addProduct = new AddProduct(dBService1); 
-        await Navigation.PushAsync(AddProduct());
+        
+        await Navigation.PushAsync(new AddProduct());
     }
 }

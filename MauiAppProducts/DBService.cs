@@ -22,17 +22,14 @@ public class DBService
     {
         _categories = new List<Category>
         {
-            new Category { Id = _nextCategoriesId++, Name = "Мясо", Description = "Описание" },
-            new Category { Id = _nextCategoriesId++, Name = "Молочные продукты", Description = "Описание" },
-            new Category { Id = _nextCategoriesId++, Name = "Овощи/Фрукты", Description = "Описание" },
-            new Category { Id = _nextCategoriesId++, Name = "Снеки", Description = "Описание" }
+            new Category { Id = _nextCategoriesId++, CategoryName = "Название категории", CategoryDescription = "Описание" },
+         
         };
         _products = new List<Product>
         {
-            new Product {Id = _nextProductId++, Name="Куриная грудка", Description="Свежая куриная грудка", CategoryId=1, Price=350,},
-            new Product {Id = _nextProductId++, Name="Помидоры", Description="Свежие помидоры", CategoryId=2, Price=200,},
-            new Product {Id = _nextProductId++, Name="Молоко", Description="Коровье молоко", CategoryId=3, Price=120,},
-            new Product {Id = _nextProductId++, Name="Чипсы", Description="Картофельные чипсы", CategoryId=4, Price=150,}
+            new Product {Id = _nextProductId++, Name="Название продукта", Description="Описание продукта", CategoryId=1, Price=0,},
+         
+
         };
     }
     public async Task<List<Category>> GetAllCategoriesAsync()
@@ -80,8 +77,8 @@ public class DBService
         var existing = _categories.FirstOrDefault(c => c.Id == category.Id);
         if (existing!=null)
         {
-            existing.Name = category.Name;
-            existing.Description = category.Description;
+            existing.CategoryName = category.CategoryName;
+            existing.CategoryDescription = category.CategoryDescription;
 
         }
         return existing;
@@ -95,8 +92,8 @@ public class DBService
         {
             if (existing!=null)
             {
-                existing.Name = category.Name;
-                existing.Description = category.Description;
+                existing.CategoryName = category.CategoryName;
+                existing.CategoryDescription = category.CategoryDescription;
             }
             return existing;
         }

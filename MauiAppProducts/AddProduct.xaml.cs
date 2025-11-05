@@ -21,10 +21,10 @@ public partial class AddProduct : ContentPage
 		get => categories;
 		set { categories= value; OnPropertyChanged(); }
 	}
-	public AddProduct(DBService dbService, int categoryId)
+	public AddProduct(DBService dbService)
 	{
 		InitializeComponent();
-		dbService = _dbService;
+		_dbService = dbService;
 		BindingContext = this;
 		LoadList();
 	

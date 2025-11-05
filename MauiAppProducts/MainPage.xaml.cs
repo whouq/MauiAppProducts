@@ -10,24 +10,21 @@
 
         }
 
-        private async void Meet_Click(object sender, EventArgs e)
+      
+
+        private async void  AddCategory_click(object sender, EventArgs e)
         {
-          await Navigation.PushAsync(new ProductMeet(dBService));
+            await Navigation.PushAsync(new AddCategory());
         }
 
-        private async void Milk_Click(object sender, EventArgs e)
+        private async void EditCategory_click(object sender, EventArgs e)
         {
-           await Navigation.PushAsync(new ProductMilk());
+            await Navigation.PushAsync(new AddCategory());
         }
 
-        private async void Vegetable_Click(object sender, EventArgs e)
+        private void DeleteCategory_click(object sender, EventArgs e)
         {
-          await Navigation.PushAsync(new ProductVegetable());
-        }
 
-        private async void Snacks_Click(object sender, EventArgs e)
-        {
-           await Navigation.PushAsync(new ProductSnaks());
         }
     }
 }
