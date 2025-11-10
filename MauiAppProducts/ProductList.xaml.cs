@@ -41,24 +41,29 @@ public partial class ProductList : ContentPage
         Products = allProducts.Where(s => s.CategoryId == 1).ToList();
         ListViewProduct.ItemsSource = Products;
     }
+    public int DeleteId { get; set; } = 0;
 
-  
 
     private async void EditProduct_click(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AddProduct());
+        if (Id==null)
+        {
+            return;
+        }
+        await Navigation.PushAsync(new AddProduct(dBService));
     }
 
     private async void DeleteProduct_click(object sender, EventArgs e)
     {
-      
-      
-        
+
+        dBService.DeleteProductAsync(DeleteId);
+        LoadList();
+
     }
 
     private async void AddProduct_click(object sender, EventArgs e)
     {
         
-        await Navigation.PushAsync(new AddProduct());
+        await Navigation.PushAsync(new AddProduct(dBService));
     }
 }

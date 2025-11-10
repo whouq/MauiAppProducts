@@ -71,17 +71,12 @@ public class DBService
         return new List<Category>(_categories);
     }
 
-    public async Task<Category> AddCategoryAsync(Category category)
+    public async Task AddCategoryAsync(Category category)
     {
-        await Task.Delay(500);
-        var existing = _categories.FirstOrDefault(c => c.Id == category.Id);
-        if (existing!=null)
-        {
-            existing.CategoryName = category.CategoryName;
-            existing.CategoryDescription = category.CategoryDescription;
-
-        }
-        return existing;
+        AutoIncr[1]++;
+        category.Id = AutoIncr[1];
+        SaveId();
+       _categories.Add(category);
         SaveCategory();
     }
 
@@ -199,13 +194,14 @@ public class DBService
         string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbAutoIncr.json");
         if (!File.Exists(filepath))
         {
-            AutoIncr = new List<int> { 0, 0 };
+            AutoIncr = new List<int> { 1, 1 };
+            return;
         }
         var data1= await File.ReadAllTextAsync(filepath);
         AutoIncr = JsonSerializer.Deserialize<List<int>>(data1);
     }
-   
 
+    
 
     private async Task Save()
     {

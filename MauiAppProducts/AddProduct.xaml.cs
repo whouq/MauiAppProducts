@@ -34,12 +34,12 @@ public partial class AddProduct : ContentPage
 
 	public async void LoadList()
 	{
-		categories = await _dbService.LoadCategory();
-		products = await _dbService.LoadProduct();
+		categories = await dbService.LoadCategory();
+		products = await dbService.LoadProduct();
 	}
 	public async void Save_click (object sender, EventArgs e)
 	{
-		_dbService.AddProductAsync(ProductHere);
+		dbService.AddProductAsync(ProductHere);
 		LoadList();
        
 
