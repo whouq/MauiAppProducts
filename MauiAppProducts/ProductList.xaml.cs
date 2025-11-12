@@ -53,8 +53,10 @@ public partial class ProductList : ContentPage
         await Navigation.PushAsync(new AddProduct(dBService));
     }
 
+
     private async void DeleteProduct_click(object sender, EventArgs e)
     {
+
 
         dBService.DeleteProductAsync(DeleteId);
         LoadList();

@@ -80,33 +80,34 @@ public class DBService
         SaveCategory();
     }
 
-    public async Task<Category> UpdateCategoryAsync(Category category)
+    public async Task UpdateCategoryAsync(int newcategoryid, Category categoryupd)
     {
         await Task.Delay(500);
-        var existing = _categories.FirstOrDefault(c => c.Id == category.Id);
+        foreach (Category category1 in _categories)
         {
-            if (existing!=null)
+            if (category1.Id==newcategoryid)
             {
-                existing.CategoryName = category.CategoryName;
-                existing.CategoryDescription = category.CategoryDescription;
+                category1.CategoryName = categoryupd.CategoryName;
+                category1.CategoryDescription = categoryupd.CategoryDescription;
+                SaveCategory();
+                break;
             }
-            return existing;
         }
+        
     }
-    public async Task<bool> DeleteCategoryAsync(int id)
+    public async Task DeleteCategoryAsync(int id)
     {
         await Task.Delay(500);
-        var existing = _categories.FirstOrDefault(c => c.Id ==id);
-        if (_categories != null)
+        Category categorydel = new Category();
+        foreach (Category category in _categories)
         {
-            var hasProducts = _products.Any(p => p.CategoryId == id);
-            if (hasProducts)
+            if (category.Id==id)
             {
-                return false;
+                categorydel = category;
             }
-            return true;
         }
-        return false;
+        _categories.Remove(categorydel);
+        SaveCategory();
     }
     public async Task<List<Product>> GetAllProductsAsync()
     {

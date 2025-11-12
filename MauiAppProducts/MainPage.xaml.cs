@@ -11,13 +11,6 @@ namespace MauiAppProducts
         
         private readonly DBService dBService = new DBService ();
 
-       private List<Product> products = new List<Product> ();
-
-        public List<Product> Products
-        {
-            get => products;
-            set { products = value; OnPropertyChanged(); }
-        }
 
 
         public MainPage()
@@ -25,49 +18,67 @@ namespace MauiAppProducts
             InitializeComponent();
             dBService.LoadId();
         }
+
         
-        public void OnAppearing()
+        
+        protected override async void OnAppearing()
         {
-            LoadDataCommand
+            LoadList();
+ 
         }
 
       private async void LoadList()
         {
             ListViewCategory.ItemsSource = await dBService.GetAllCategoriesAsync();
-            dBService.LoadId();
 
         }
+
 
         private async void  AddCategory_click(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new AddCategory(dBService));
-            LoadList();
+          
         }
 
+        public Category CategoryHere { get; set; } = new Category();
         private async void EditCategory_click(object sender, EventArgs e)
         {
-           
+           await dBService.UpdateCategoryAsync(DeleteId, CategoryHere);
             await Navigation.PushAsync(new AddCategory(dBService));
             LoadList();
         }
+
         public int DeleteId { get; set; } = 0;
       
         private async void DeleteCategory_click(object sender, EventArgs e)
         {
-            await dBService.DeleteCategoryAsync(DeleteId);
-            LoadList();
+            if (SelectedCategoryId<=0) return;
+            try
+            {
+                await dBService.DeleteCategoryAsync(SelectedCategoryId);
+                LoadList();
+            }
+            catch (Exception ex) 
+            {
+                return;
+            }
+       
         }
-        private List<Product> productShow = new List<Product>();
-        public List<Product> ProductShow
+        private int SelectedCategoryId;
+        private  async void OnCategorySelected(Category category)
         {
-            get => productShow;
-            set { productShow = value; OnPropertyChanged(); }
+   
+            if (category != null)
+            {
+                SelectedCategoryId = category.Id;
+                CategoryHere = category;
+            }
+            await Navigation.PushAsync(new ProductList(dBService));
         }
-      
-        public int RequestIdProduct { get; set; } = 0;
-        private void ShowProduct(object sender, EventArgs e)
+
+        private async void OnBorderTapped(object sender, TappedEventArgs e)
         {
-            ProductShow = Products.Where(s => s.Id == RequestIdProduct).ToList();
+            await Navigation.PushAsync(new ProductList(dBService));
         }
     }
 }

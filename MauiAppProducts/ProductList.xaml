@@ -17,7 +17,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Frame Margin="10,5" BackgroundColor="White" HasShadow="True" >
+                            <Border Margin="10,5" BackgroundColor="White" >
                             <Grid ColumnDefinitions="Auto,*,Auto" Padding="15">
                                 <StackLayout Grid.Column="1" Margin="10,0" Spacing="5">
                                     <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" TextColor="White"></Label>
@@ -27,7 +27,7 @@
                                     </StackLayout>
                                 </StackLayout>
                             </Grid>
-                            </Frame>
+                            </Border>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
