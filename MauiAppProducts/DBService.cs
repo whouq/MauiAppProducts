@@ -129,7 +129,7 @@ public class DBService
         }
         return existing;
     }
-    public async void UpdateProductAsync(int productId, Product upproduct)
+    public async Task UpdateProductAsync(int productId, Product upproduct)
     {
         await Task.Delay(500);
        foreach(Product product1 in _products)

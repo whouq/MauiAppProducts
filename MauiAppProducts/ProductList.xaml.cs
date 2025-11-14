@@ -6,16 +6,11 @@ namespace MauiAppProducts;
 
 public partial class ProductList : ContentPage
 {
-    private readonly DBService dBService;
-    private List<Category> categories = new List<Category>();
-    public List<Category> Categories
-    {
-        get => categories;
-        set { categories = value; OnPropertyChanged(); }
-    }
+    private readonly DBService dBService = new DBService();
+  
     public Product ProductHere { get; set; } = new Product();
     private List<Product> products = new List<Product>();
-    public DBService dBService1 {  get; set; } = new DBService();
+  
 
     public List<Product> Products
     {
@@ -26,31 +21,26 @@ public partial class ProductList : ContentPage
 	{
 		InitializeComponent();
         this.dBService = dBService;
-
         LoadList();
-        BindingContext = this;
+        ListViewProduct.SetBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(Products), source: this));
+
     }
     public async void LoadList()
     {
-        categories = await dBService.LoadCategory();
-        products = await dBService.LoadProduct();
+        ListViewProduct.ItemsSource = await dBService.GetAllProductsAsync();
     }
     protected async override void OnAppearing()
     {
-        var allProducts = await dBService.GetAllProductsAsync();
-        Products = allProducts.Where(s => s.CategoryId == 1).ToList();
-        ListViewProduct.ItemsSource = Products;
+        LoadList();
     }
     public int DeleteId { get; set; } = 0;
 
 
     private async void EditProduct_click(object sender, EventArgs e)
     {
-        if (Id==null)
-        {
-            return;
-        }
+        await dBService.UpdateProductAsync(DeleteId, ProductHere);
         await Navigation.PushAsync(new AddProduct(dBService));
+        LoadList();
     }
 
 
@@ -67,5 +57,9 @@ public partial class ProductList : ContentPage
     {
         
         await Navigation.PushAsync(new AddProduct(dBService));
+    }
+    private async void Back_click(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new MainPage());
     }
 }
