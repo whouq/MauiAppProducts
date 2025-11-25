@@ -11,15 +11,16 @@ namespace MauiAppProducts
         
         private readonly DBService dBService = new DBService ();
 
-
+        
+        public Category SelectedCategory { get; set; }
 
         public MainPage()
         {
             InitializeComponent();
+            
             dBService.LoadId();
         }
 
-        
         
         protected override async void OnAppearing()
         {
@@ -40,7 +41,12 @@ namespace MauiAppProducts
           
         }
 
+
+
+        public int DeleteId { get; set; } = 0;
         public Category CategoryHere { get; set; } = new Category();
+
+
         private async void EditCategory_click(object sender, EventArgs e)
         {
            await dBService.UpdateCategoryAsync(DeleteId, CategoryHere);
@@ -48,35 +54,24 @@ namespace MauiAppProducts
             LoadList();
         }
 
-        public int DeleteId { get; set; } = 0;
-      
+
         private async void DeleteCategory_click(object sender, EventArgs e)
         {
-            if (SelectedCategoryId<=0) return;
+            if (SelectedCategory == null) return;
             try
             {
-                await dBService.DeleteCategoryAsync(SelectedCategoryId);
+                await dBService.DeleteCategoryAsync(SelectedCategory.Id);
                 LoadList();
             }
-            catch (Exception ex) 
+
+            catch  
             {
                 return;
             }
        
         }
-        private int SelectedCategoryId;
-        private  async void OnCategorySelected(Category category)
-        {
-   
-            if (category != null)
-            {
-                SelectedCategoryId = category.Id;
-                CategoryHere = category;
-            }
-            await Navigation.PushAsync(new ProductList(dBService));
-        }
 
-        private async void OnBorderTapped(object sender, TappedEventArgs e)
+        private async void ToProduct_click(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new ProductList(dBService));
         }

@@ -8,33 +8,31 @@ public partial class ProductList : ContentPage
 {
     private readonly DBService dBService = new DBService();
   
-    public Product ProductHere { get; set; } = new Product();
-    private List<Product> products = new List<Product>();
-  
+    public Product SelectedProduct { get; set; }
 
-    public List<Product> Products
-    {
-        get => products;
-        set { products = value; OnPropertyChanged(); } 
-    }
     public ProductList(DBService dBService)
 	{
 		InitializeComponent();
         this.dBService = dBService;
         LoadList();
-        ListViewProduct.SetBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(Products), source: this));
+        
 
     }
     public async void LoadList()
     {
         ListViewProduct.ItemsSource = await dBService.GetAllProductsAsync();
     }
+
     protected async override void OnAppearing()
     {
         LoadList();
     }
-    public int DeleteId { get; set; } = 0;
 
+
+
+
+    public int DeleteId { get; set; } = 0;
+    public Product ProductHere { get; set; } = new Product();
 
     private async void EditProduct_click(object sender, EventArgs e)
     {
@@ -44,12 +42,23 @@ public partial class ProductList : ContentPage
     }
 
 
+
+
     private async void DeleteProduct_click(object sender, EventArgs e)
     {
+        if (SelectedProduct == null) return;
+        try
+        {
+         await dBService.DeleteProductAsync(SelectedProduct.Id);
+         LoadList();
 
-
-        dBService.DeleteProductAsync(DeleteId);
-        LoadList();
+        }
+        catch 
+        {
+            return;
+        }
+        
+        
 
     }
 
@@ -58,8 +67,12 @@ public partial class ProductList : ContentPage
         
         await Navigation.PushAsync(new AddProduct(dBService));
     }
+
+
     private async void Back_click(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new MainPage());
     }
+
+    
 }

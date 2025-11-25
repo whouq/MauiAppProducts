@@ -3,7 +3,6 @@ namespace MauiAppProducts;
 public partial class AddProduct : ContentPage
 {
 	private DBService dBService;
-	
 	public Product ProductHere { get; set; } = new Product();
 	
 	public AddProduct(DBService dbService)
@@ -11,19 +10,14 @@ public partial class AddProduct : ContentPage
 		InitializeComponent();
 		dBService = dbService;
 		BindingContext = this;
-	
-	
-	
-	}
-	public DBService dbService {  get; set; } = new DBService();
 
+	}
 	
+
 	public async void Save_click (object sender, EventArgs e)
 	{
         await dBService.AddProductAsync(ProductHere);
         await Navigation.PopAsync();
-
-
 
     }
 

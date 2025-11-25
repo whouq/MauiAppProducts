@@ -109,26 +109,29 @@ public class DBService
         _categories.Remove(categorydel);
         SaveCategory();
     }
+
+
+
+
+
+
     public async Task<List<Product>> GetAllProductsAsync()
     {
        
         return _products.ToList();
     }
-    public async Task<Product> AddProductAsync(Product product)
+
+
+    public async Task AddProductAsync(Product product)
     {
-        await Task.Delay(500);
-        var existing = _products.FirstOrDefault(c => c.Id == product.Id);
-        if (existing != null)
-        {
-            existing.Name = product.Name;
-            existing.Description = product.Description;
-            existing.Price = product.Price;
-
-
-
-        }
-        return existing;
+        AutoIncr[1]++;
+        product.Id = AutoIncr[1];
+        SaveId();
+        _products.Add(product);
+        SaveCategory();
     }
+
+
     public async Task UpdateProductAsync(int productId, Product upproduct)
     {
         await Task.Delay(500);
@@ -147,16 +150,16 @@ public class DBService
         
     }
 
-    public async void DeleteProductAsync(int id)
+    public async Task DeleteProductAsync(int id)
     {
-        Product productDell = new Product();
+        Product productdel = new Product();
         foreach(Product product in _products)
         {
             if (product.Id == id)
             {
-                productDell = product;
+                productdel = product;
             }
-            _products.Remove(productDell);
+            _products.Remove(productdel);
             SaveProduct();
         }
     }
@@ -167,16 +170,13 @@ public class DBService
     }
 
 
-    //public async Task<Category> GetAllCategoriesId(int Id)
-    //{
-    //    await Task.Delay(500);
-    //    Category category = _categories.FirstOrDefault(c => c.Id == Id);
-    //    category = new Category
-    //    {
+    public async Task<Category> GetAllCategoryId(int Id)
+    {
+        await Task.Delay(500);
+        return _categories.FirstOrDefault(c => c.Id == Id);
 
-    //    };
+    }
 
-    //}
     public async Task<Product> GetAllProductId(int Id)
     {
         await Task.Delay(500);
