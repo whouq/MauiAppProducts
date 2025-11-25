@@ -140,7 +140,7 @@ public class DBService
             if(product1.Id == productId)
             {
                 product1.Name = upproduct.Name;
-                product1.Description = upproduct.Description;
+                product1.Description = upproduct.Description;OutOfMemoryException;
                 product1.Price = upproduct.Price;
                 SaveProduct();
                 break;
