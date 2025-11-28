@@ -16,13 +16,13 @@
                 <Button Text="Продукты" Clicked="ToProduct_click" BackgroundColor="LightCoral" TextColor="White" HeightRequest="50" CornerRadius="10" Grid.Column="3"/>
                 
             </Grid>
-            <ListView x:Name="ListViewCategory"  Grid.Row="2" HasUnevenRows="True" SelectionMode="Single" SelectedItem="{Binding SelectedCatgory}"  BackgroundColor="Transparent">
+            <ListView x:Name="ListViewCategory"  Grid.Row="2" HasUnevenRows="True" SelectionMode="Single" SelectedItem="{Binding SelectedCategory}"  BackgroundColor="Transparent">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             
                             <Border Margin="10,5" BackgroundColor="White">
-                          
+                              
                                 
                                 <Grid ColumnDefinitions="Auto,*,Auto" Padding="15" >
                                     <StackLayout Grid.Column="1" Margin="10,0" Spacing="5">

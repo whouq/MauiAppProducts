@@ -13,6 +13,7 @@ public class DBService
     private int _nextProductId = 1;
     private int _nextCategoriesId = 1;
     private List<int> AutoIncr { get; set; } = new List<int> { 1, 1 };
+    private List<Task> loadTasks = new List<Task>();
     public DBService()
     {
         InitializeData();
@@ -20,30 +21,47 @@ public class DBService
     }
     private async void InitializeData()
     {
-        _categories = new List<Category>
-        {
-            new Category { Id = _nextCategoriesId++, CategoryName = "Название категории", CategoryDescription = "Описание" },
+        //_categories = new List<Category>
+        //{
+        //    new Category { Id = _nextCategoriesId++, CategoryName = "Название категории", CategoryDescription = "Описание" },
          
-        };
-        _products = new List<Product>
-        {
-            new Product {Id = _nextProductId++, Name="Название продукта", Description="Описание продукта", CategoryId=1, Price=0,},
+        //};
+        //_products = new List<Product>
+        //{
+        //    new Product {Id = _nextProductId++, Name="Название продукта", Description="Описание продукта", CategoryId=1, Price=0,},
          
 
-        };
+        //};
+        Task loadId = LoadId();
+        Task loadCategory = LoadCategory();
+        Task loadProduct = LoadProduct();
+        loadTasks = new List<Task> { loadId, loadCategory, loadProduct };
+        await loadId;
+        await loadCategory;
+        await loadProduct;
+        //SaveId();
+        //SaveCategory();
+        //SaveProduct();
+
     }
     public async Task<List<Category>> GetAllCategoriesAsync()
     {
+        await Task.Delay(500);
+
+        Task.WaitAll(loadTasks);
+
         return _categories.ToList();
     }
     public async void SaveCategory()
     {
+        await Task.Delay(500);
         string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbCategory.json");
         using FileStream fileStream=File.Create(filepath);
         JsonSerializer.Serialize(fileStream, _categories);
     }
     public async void SaveProduct()
     {
+        await Task.Delay(500);
         string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbProduct.json");
         using FileStream fileStream = File.Create(filepath);
         JsonSerializer.Serialize(fileStream, _products);
@@ -73,6 +91,7 @@ public class DBService
 
     public async Task AddCategoryAsync(Category category)
     {
+        await Task.Delay(500);
         AutoIncr[1]++;
         category.Id = AutoIncr[1];
         SaveId();
@@ -124,6 +143,7 @@ public class DBService
 
     public async Task AddProductAsync(Product product)
     {
+        await Task.Delay(500);
         AutoIncr[1]++;
         product.Id = AutoIncr[1];
         SaveId();
@@ -152,6 +172,8 @@ public class DBService
 
     public async Task DeleteProductAsync(int id)
     {
+        await Task.Delay(500);
+
         Product productdel = new Product();
         foreach(Product product in _products)
         {
@@ -163,6 +185,10 @@ public class DBService
             SaveProduct();
         }
     }
+
+
+
+
     public async Task <List<Category>> GetCategoriesAsync()
     {
         await Task.Delay(500);
@@ -190,7 +216,7 @@ public class DBService
         using FileStream fileStream = File.Create(filepath);
         JsonSerializer.Serialize(fileStream, AutoIncr);
     }
-    public async void LoadId()
+    public async Task LoadId()
     {
         string filepath = Path.Combine(FileSystem.Current.AppDataDirectory, "dbAutoIncr.json");
         if (!File.Exists(filepath))

@@ -17,8 +17,7 @@ namespace MauiAppProducts
         public MainPage()
         {
             InitializeComponent();
-            
-            dBService.LoadId();
+            BindingContext = this;
         }
 
         
@@ -73,7 +72,12 @@ namespace MauiAppProducts
 
         private async void ToProduct_click(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new ProductList(dBService));
+            if (SelectedCategory == null) return;
+          var navigationParametr = new Dictionary<string, object>();
+            {
+                { "Category", dBService.GetAllCategoriesAsync}
+            };
+            await Navigation.PushAsync(new ProductList(navigationParametr));
         }
     }
 }

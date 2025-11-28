@@ -15,7 +15,7 @@ public partial class ProductList : ContentPage
 		InitializeComponent();
         this.dBService = dBService;
         LoadList();
-        
+        BindingContext = this;
 
     }
     public async void LoadList()

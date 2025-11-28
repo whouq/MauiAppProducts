@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 namespace MauiAppProducts
 {
@@ -12,6 +8,7 @@ namespace MauiAppProducts
         public int Id { get; set; }
         public string CategoryName { get; set; }
         public string CategoryDescription { get; set; }
+        [JsonIgnore]
         public ObservableCollection<Product> Products { get; set; }
        
        
